@@ -63,8 +63,14 @@ Fetch the same paths at a newer revision, re-apply the `tools:` line to the six 
 
 ## Local change: automatic delegation (2026-11-22)
 
-One sentence beginning "Use proactively" was appended to the `description:` line of every Agency Agents role in `.claude/agents/` (not to `loop-verifier`). Claude Code uses that field to decide when to delegate, so the roles now run during ticket work without being named. Nothing else in the role files changed.
+One sentence beginning "Use proactively" was appended to the `description:` line of every Agency Agents role in `.claude/agents/` (not to `loop-verifier`). Claude Code uses that field to decide when to delegate, so the roles now run during ticket work without being named. Nothing else in the role files changed in that step.
 
 This supersedes any statement above that a role file is unmodified or that the `tools:` line is the only local change. To compare a role with the pinned upstream file, remove that sentence (and the `tools:` line where one was added) first.
 
 The steps at which each role runs are in `.claude/skills/implement-ticket/SKILL.md`.
+
+A section headed "In this repository" was then inserted directly after the frontmatter of every Agency Agents role (not into `loop-verifier`), before the upstream text. It is project-specific text written for this repository, not upstream text. Because no application code exists yet, it describes the planned stack, modules and commands and says they are planned: the dependency policy that binds the role, what the role does here, its planned commands (or the output a read-only role must be given), a checklist of this project's rules with their sources, the parts of the generic text that do not apply, and what the role hands back. It ends with the sentence "This section and CLAUDE.md override the generic text below wherever they differ." The upstream text below it and the rest of the frontmatter are unchanged.
+
+To compare a role with the pinned upstream file, remove three things first: the "Use proactively" sentence (in Backend Architect, Frontend Developer and Reality Checker also the full stop that was added in front of it, where the upstream description has none), the section "In this repository" together with the blank line after it, and the `tools:` line where one was added. Check the sections against the code once code exists; until then they describe a plan.
+
+Verification, 2026-11-22: the headless `claude -p` loading check was not run in this preparation stage and is still to be done after the delivery tooling is installed. File structure was checked by reading the files: eight Agency Agents roles, each starting with "In this repository" after valid frontmatter, six with `tools: Read, Grep, Glob`.
