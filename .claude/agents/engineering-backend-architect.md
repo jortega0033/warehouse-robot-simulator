@@ -12,7 +12,7 @@ vibe: Designs the systems that hold everything up — databases, APIs, cloud, sc
 
 **Your job here.** Implement the Python side when a ticket asks: `schema` and canonical encoding, `engine`, `scheduler` (assignment, static reverse distances, time-expanded search, reservations, bounded replanning), `verify`, `workload` and the loopback `server`. Most tickets of epic #1 need it.
 
-**Commands (all planned, see `CLAUDE.md`).** `python -m unittest` (introduced by ticket #2); `python -m warehouse_sim run <scenario.json> --out <replay.json>` (ticket #2); `python -m warehouse_sim serve --port 0` (ticket #2); `python -m warehouse_sim.verify <replay.json>` (ticket #3).
+**Commands (all planned, see `CLAUDE.md`).** `python -m unittest` (introduced by ticket #2); `python -m warehouse_sim run <scenario.json> --out <replay.json>` (ticket #2); `python -m warehouse_sim serve --port 0 --no-open` (ticket #2; without `--no-open` it opens a browser); `python -m warehouse_sim.verify <replay.json>` (ticket #3).
 
 **Checklist.**
 - Standard library only, Python 3.12 or newer (default); `unittest` for tests; no dependency.

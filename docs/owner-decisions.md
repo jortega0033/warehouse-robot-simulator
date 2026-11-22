@@ -20,7 +20,7 @@ Entry 11 (Rust verified in CI only) does not apply: this project has no Rust. Nu
 
 ## Entry 10: decisions settled with the ticket's default
 
-The default applies until the owner says otherwise. Ticket numbers are GitHub issues in this repository; WH-01a, WH-01b, WH-04a, WH-04b, WH-07, WH-08a, WH-08b and WH-09 are new tickets whose issue numbers are assigned when they are created (#2 and #5 become `tracking` parents of the first four).
+The default applies until the owner says otherwise. Ticket numbers are GitHub issues in this repository; WH-01a, WH-01b, WH-03a, WH-03b, WH-04a, WH-04b, WH-07, WH-08a, WH-08b and WH-09 are new tickets whose issue numbers are assigned when they are created (#2, #4 and #5 become `tracking` parents of the sub-issues that carry their names).
 
 | ID | Decision | Ticket(s) | Default applied |
 |---|---|---|---|
@@ -29,14 +29,14 @@ The default applies until the owner says otherwise. Ticket numbers are GitHub is
 | D3 | Tick numbering in reports | WH-01a, #3 | A fault in the actions of tick t is reported at snapshot t+1 (the PRD's "collision at tick 2") |
 | D4 | Default server port | WH-01b | `--port` default 8780; `--port 0` picks a free port |
 | D5 | Where replays are written | WH-01a (`run`), WH-01b (`serve` keeps the replay in memory) | `--out` is required; `runs/` is git-ignored; checks use a scratch directory |
-| D6 | Numbers the plan leaves open | WH-01a (constants), WH-07, #4, WH-09 | Scenario file 256 KiB, replay file 8 MiB, 50,000 expansions per planning call, at most 3 alternate priority orders, checkpoint every 50 ticks |
+| D6 | Numbers the plan leaves open | WH-01a (constants), WH-07, WH-03b, WH-09 | Scenario file 256 KiB, replay file 8 MiB, 50,000 expansions per planning call, at most 3 alternate priority orders, checkpoint every 50 ticks |
 | D7 | Verifier reason codes | #3, WH-09 (`checkpoint_mismatch`) | `same_cell_collision`, `edge_swap`, `wall_traversal`, `out_of_bounds`, `bad_move_distance`, `drop_without_pickup`, `missing_action`, `duplicate_action`, `summary_mismatch`, `checkpoint_mismatch` |
-| D8 | How the blocked reason is chosen | WH-08a | Planning calls end `route`, `no_route` or `cap_hit`; a goal held by a non-moving robot or an exhausted planning horizon is `no_route`, never budget exhaustion. At termination: tick cap gives `run_limit_reached`; at the no-progress termination `search_budget_exhausted` if any planning call in the qualifying ticks ended `cap_hit`, else `no_legal_progress`; when only statically unreachable jobs remain, `static_unreachable` |
+| D8 | How the blocked reason is chosen | WH-08a | Planning calls end `route`, `no_route` or `cap_hit`; a goal held by a non-moving robot (defined in D15) or an exhausted planning horizon is `no_route`, never budget exhaustion. At termination: tick cap gives `run_limit_reached`; at the no-progress termination `search_budget_exhausted` if any planning call in the qualifying ticks ended `cap_hit`, else `no_legal_progress`; when only statically unreachable jobs remain, `static_unreachable` |
 | D9 | Random numbers for workloads | #6 | A small own integer generator, not `random`, so seeds match on every Python version and OS |
 | D10 | Scale steps and budget | #7 | 12, 25, 50, 100, 200 robots; 10 minutes per step; defaults unchanged, recommendation only |
 | D11 | Browser checks | WH-01b, WH-04b, WH-08b, #7 | Manual and recorded; no automation dependency (it would break the dependency policy) |
 | D12 | Licence | none | Stay unselected; no `LICENSE` file is added |
 | D13 | JavaScript tests | WH-01b, WH-04b | None; the page renders server snapshots and logic stays in Python |
 | D14 | Play interval | WH-04b | 500 ms per tick, Space toggles |
-| D15 | Planning horizon | #4 | Static distance from start to goal plus 20 ticks (`horizon_slack` 20), recorded in the replay search settings |
+| D15 | Planning horizon and non-moving robots | #4 (WH-03a, WH-03b) | Horizon: static distance from start to goal plus 20 ticks (`horizon_slack` 20), recorded in the replay search settings. A robot is non-moving when it has no job, its plan has ended, or it ended `no_route` or `cap_hit` in the current planning round; a lower-priority robot that is not yet planned in the round is not non-moving and is ignored by higher-priority searches. When a robot ends `no_route` or `cap_hit` and an earlier plan of the same round enters its cell, the round is repeated with that robot non-moving, until no earlier plan enters the cell of a non-moving robot; then at most `alternate_bound` (default 3) alternate priority orders are tried and the result with strictly fewer stalled robots is kept |
 | D16 | `serve` launch behaviour | WH-01b | `serve [scenario] [--port N] [--no-open]`; default scenario `scenarios/single-order.json`; opens the browser unless `--no-open`; replay kept in memory |
