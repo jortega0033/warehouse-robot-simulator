@@ -60,3 +60,11 @@ The six reviewer roles must report exactly `Read, Grep, Glob`.
 ## Updating
 
 Fetch the same paths at a newer revision, re-apply the `tools:` line to the six reviewer roles, and update the revision and hashes in this file in the same commit.
+
+## Local change: automatic delegation (2026-11-22)
+
+One sentence beginning "Use proactively" was appended to the `description:` line of every Agency Agents role in `.claude/agents/` (not to `loop-verifier`). Claude Code uses that field to decide when to delegate, so the roles now run during ticket work without being named. Nothing else in the role files changed.
+
+This supersedes any statement above that a role file is unmodified or that the `tools:` line is the only local change. To compare a role with the pinned upstream file, remove that sentence (and the `tools:` line where one was added) first.
+
+The steps at which each role runs are in `.claude/skills/implement-ticket/SKILL.md`.
