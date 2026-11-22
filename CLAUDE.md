@@ -1,0 +1,87 @@
+# CLAUDE.md
+
+Working instructions for this repository. Read this file first, then the documents it links to. It does not repeat them.
+
+## What this is
+
+A planned offline warehouse robot simulator. A person runs a fictional order scenario on a grid, watches robots share aisle space in a local browser, inspects why an order completed or stalled, and checks a saved replay with an independent verifier. **Nothing is implemented yet.** The repository holds the product plan, the technical specification and the backlog. No command in this file runs today; every command below is marked "planned" with the ticket that introduces it.
+
+## Sources of truth
+
+| Topic | Document |
+|---|---|
+| Product scope, requirements, ticket scopes, hand-checked fixture | [docs/PRD.md](docs/PRD.md) |
+| Simulation rules, scheduler, replay and interface, same fixture | [docs/TECHNICAL_SPEC.md](docs/TECHNICAL_SPEC.md) |
+| Planned module map, tick convention, schema freeze rule, differences between the documents | [docs/architecture.md](docs/architecture.md) (planned, not implemented) |
+| Backlog | Epic issue #1 and its sub-issues on GitHub. The epic's table is authoritative for dependency order, parallel tracks and estimates. |
+| Loop setup and its limits | [LOOP.md](LOOP.md), [loop-constraints.md](loop-constraints.md) |
+| Project subagents, their origin and local changes | [.claude/agency-agents/README.md](.claude/agency-agents/README.md) |
+| Ticket workflow and the step at which each agent role runs | [.claude/skills/implement-ticket/SKILL.md](.claude/skills/implement-ticket/SKILL.md), section "Ticket implementation: agent roles run automatically" below |
+
+When a document and the code disagree once code exists, the code is the baseline and [docs/architecture.md](docs/architecture.md) records the difference. A ticket that changes a contract (scenario schema, replay schema, command line, caps) updates the document that states it in the same pull request.
+
+## Stack and constraints (planned)
+
+The PRD names the stack: "standard-library Python and plain JavaScript served from the same local origin" ([docs/PRD.md](docs/PRD.md), Scope). Neither document names a Python version or a package name; the defaults are Python 3.12 or newer and the package `warehouse_sim`, and ticket #2 confirms or changes them.
+
+- Standard library only, in the application and in the tests (`unittest`). No pip or npm dependency, no build step, no framework, no CDN, font, image or script from another host.
+- Local browser and CPU process only. The server binds `127.0.0.1`. No outgoing request from the server, the page or the tests. Browser checks run with external requests blocked ([docs/PRD.md](docs/PRD.md), WH-06).
+- Deterministic: identical input, solver version and seed give identical canonical replay bytes. Integer ticks and coordinates, stable keys, stable arrays, canonical encoding ([docs/TECHNICAL_SPEC.md](docs/TECHNICAL_SPEC.md), "Replay and interface").
+- Starting caps: 16 by 16 cells, 12 robots, 100 orders, 2,000 ticks, plus input-size and search-expansion caps whose numbers the tickets set. Raise a specific cap only in the scale experiment (WH-06), after measuring.
+- Imported replay and scenario JSON is untrusted data. Validate schema and bounds before anything is rendered or run; show values through `textContent` or DOM nodes, never `innerHTML`, `eval` or inline script.
+- Keyboard operation and visible focus for every control ([docs/TECHNICAL_SPEC.md](docs/TECHNICAL_SPEC.md), "Replay and interface").
+- Synthetic data only: no physical devices, live inventory or customer data.
+- Licence not selected ([README.md](README.md)). Do not add a `LICENSE` file or change licence wording without the owner.
+
+## Setup, run and test commands (all planned)
+
+Nothing below exists at this commit. Each command is introduced by the ticket named; until that ticket is merged, running it fails. Interpreter: `python` on Windows, `python3` on Linux.
+
+| Purpose | Planned command | Introduced by |
+|---|---|---|
+| Run all tests | `python -m unittest` | planned: introduced by ticket #2 (WH-01) |
+| Run one scenario and write a replay | `python -m warehouse_sim run <scenario.json> --out <replay.json>` | planned: introduced by ticket #2 (WH-01) |
+| Fresh start: run the fixture and open the local browser view | `python -m warehouse_sim serve --port 0` (prints the URL; `--port 0` picks a free port) | planned: introduced by ticket #2 (WH-01) |
+| Verify a replay independently | `python -m warehouse_sim.verify <replay.json>` (exit 0 accepted, 1 rejected with the first invalid tick) | planned: introduced by ticket #3 (WH-02) |
+| Compare two assignment policies on a seeded workload | `python -m warehouse_sim compare --seed <n> ...` | planned: introduced by ticket #6 (WH-05) |
+| Scale report | `python -m warehouse_sim scale ...` | planned: introduced by ticket #7 (WH-06) |
+
+The exact flags are fixed by the ticket that introduces the command, then recorded here and in the README in the same pull request. Generated replays, run output and scale reports go to a scratch directory outside the repository (or under `runs/`, which ticket #2 adds to `.gitignore`); never commit them.
+
+## Architecture boundaries (planned)
+
+Short form of the module map in [docs/architecture.md](docs/architecture.md). Package `warehouse_sim` (default name):
+
+- `schema` and `canonical`: versioned scenario and replay JSON, validation, canonical encoding. No simulation logic.
+- `engine`: tick loop, state, action-set validation and atomic commit, event emission in robot ID order. It does not plan routes.
+- `scheduler`: job assignment, static reverse distances, time-expanded search, reservations, bounded replanning, blockage reasons. It proposes actions; only the engine commits them.
+- `verify`: the independent checker. It reconstructs occupancy and job state from the scenario and the recorded events with its own rules and must not import `engine` or `scheduler`. A rule that changes in one is written again in the other on purpose; a shared helper would defeat the check.
+- `workload`: seeded scenario generation. `server`: loopback HTTP and a fixed static allowlist, no simulation logic. `static/`: plain JavaScript page that talks to the server through documented routes only.
+- `tests/` with `unittest`; fixtures under `tests/fixtures/` and included scenarios under `scenarios/`.
+
+Rules every change must keep:
+
+- A rejected action set changes nothing: the whole set is validated and committed together, or the previous snapshot stays.
+- Tie-breaks are the ones in the technical specification (jobs by release tick then ID; robot by static distance then ID; search expansion order north, east, south, west, wait). No unordered iteration, wall-clock time or unseeded randomness in a run.
+- Schema changes after ticket #2 bump the schema version and update the schema document, the verifier and the fixtures in the same pull request.
+- A blocked run reports one of four reasons (static unreachable, search budget exhausted, no legal progress found, run limit reached) and the unfinished order IDs.
+
+## Git workflow
+
+- `main` is the default branch. Branch per ticket (`<issue-number>-<short-slug>`), pull request to `main`, small commits with a type prefix (`feat:`, `fix:`, `test:`, `docs:`, `chore:`).
+- Only the owner merges and releases. Do not push to `main`, force-push or merge your own pull request. Do not push or open a pull request unless the owner asked in the current session.
+- Order for every ticket: local checks, Code Reviewer, Reality Checker, then a draft pull request that names the issue (`Part of #1`, `Closes #n`), then CI on that draft, then ready only when CI is green.
+- Never commit `.env*`, generated replays or run output, or `.claude/state/`.
+- Do not change `.claude/agents/`, `LOOP.md`, `loop-constraints.md` or `loop-budget.md` as part of a feature ticket.
+
+## Evidence before a ticket is called done
+
+Paste real output into the pull request description; do not summarise a run you did not make. None of this can be run before ticket #2 exists, and ticket #2 creates the test command itself.
+
+1. The output tail of `python -m unittest` from a clean checkout, with the Python version and the operating system, and the test count before and after.
+2. For each acceptance criterion of the issue: the name of the test that proves it, or the exact command and what it printed. Fixtures in [docs/TECHNICAL_SPEC.md](docs/TECHNICAL_SPEC.md) are acceptance targets until a test reproduces them.
+3. For a change to a replay: `python -m warehouse_sim.verify` on a replay produced by the change (after ticket #3), and the canonical hash of two runs with the same seed.
+4. For a change under `static/`: a browser run on the local URL with the browser name and version, keyboard-only operation of the changed controls, and the console and network log free of errors and external requests. Browser automation is excluded by the dependency policy; the step is manual and listed under "Owner checks" in the pull request.
+5. For a performance claim: the machine, the fixture size and the measured numbers, not an assertion.
+6. `git status` free of stray files, and confirmation that no dependency, external URL or non-loopback listener was added.
+7. Anything not verified, said plainly.
