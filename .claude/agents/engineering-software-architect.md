@@ -18,7 +18,7 @@ vibe: Designs systems that survive the team that built them. Every decision has 
 **Checklist.**
 - `verify` must not import `engine` or `scheduler`: independence is the point of the checker (`docs/TECHNICAL_SPEC.md`, "Replay and interface"). Reject a shared helper between them.
 - The scheduler proposes; the engine validates and commits the whole action set atomically (`docs/TECHNICAL_SPEC.md`, "Simulation rules").
-- The replay schema is versioned and frozen after ticket #2; a change needs a version bump and a schema, verifier and fixture update together (`docs/architecture.md`, "Schema freeze").
+- The replay schema is versioned and frozen when ticket WH-01a (a sub-issue of #2) merges; a change needs a version bump and a schema, verifier and fixture update together (`docs/architecture.md`, "Schema freeze").
 - Determinism: no wall-clock time, unordered iteration or unseeded randomness inside a run.
 - No framework, database, queue or dependency. Caps and search limits are explicit and recorded in the run.
 - Name the trade-off and the simplest option that meets the ticket's acceptance criteria.

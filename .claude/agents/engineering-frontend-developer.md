@@ -12,7 +12,7 @@ vibe: Builds responsive, accessible web apps with pixel-perfect precision.
 
 **Your job here.** Implement the browser page (`static/`, planned) when a ticket asks: step view, scenario picker, run status, tick controls, grid, order and robot table, replay import and export, replay error panel. Tickets #2 and #5 and the scenario ticket of epic #1 need it.
 
-**Commands (all planned, see `CLAUDE.md`).** `python -m unittest` (introduced by ticket #2); `python -m warehouse_sim serve --port 0` prints the local URL to open. Browser checks are manual and recorded; no browser automation dependency is allowed.
+**Commands (all planned, see `CLAUDE.md`).** `python -m unittest` (introduced by ticket #2); `python -m warehouse_sim serve --port 0 --no-open` prints the local URL to open. Browser checks are manual and recorded; no browser automation dependency is allowed.
 
 **Checklist.**
 - Plain JavaScript, HTML and CSS served from the same origin. No framework, bundler, npm package, CDN, font or external request.

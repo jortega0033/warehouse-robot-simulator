@@ -4,7 +4,7 @@ The full repository instructions are in [CLAUDE.md](CLAUDE.md). This file repeat
 
 ## Status
 
-Planning only. There is no application code yet, so no build, run or test command works at this commit. The planned commands are listed in [CLAUDE.md](CLAUDE.md), each with the ticket that introduces it. The first one, `python -m unittest`, appears with ticket #2.
+Planning only. There is no application code yet, so no build, run or test command works at this commit. The planned commands are listed in [CLAUDE.md](CLAUDE.md), each with the ticket that introduces it. The first one, `python -m unittest`, appears with ticket WH-01a (a sub-issue of #2).
 
 ## Stack
 

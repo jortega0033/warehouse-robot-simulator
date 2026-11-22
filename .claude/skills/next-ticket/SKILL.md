@@ -54,4 +54,4 @@ A criterion that needs a person ("by hand in a normal browser", "manual, recorde
 
 ## Ask rules at any depth
 
-Edits to agent configuration, skills, hooks, `.claude/settings.json`, `.claude/agency-agents/`, `.github/`, `CLAUDE.md`, `AGENTS.md`, `LOOP.md`, `loop-constraints.md` and `loop-budget.md` ask first, in the main checkout and in every worktree. Edits made through a shell command are not covered by that rule, so the playbook forbids changing agent configuration in a ticket.
+Edits to agent configuration, skills, hooks, `.claude/settings.json` and `.claude/agency-agents/` ask first at any depth, so also in a ticket worktree. Edits to `.github/`, `CLAUDE.md`, `AGENTS.md`, `LOOP.md`, `loop-constraints.md` and `loop-budget.md` ask first only at the project root (the rules in `.claude/settings.json` anchor them there), so in a ticket worktree they may not ask: a ticket that edits one of them (WH-01a edits the CI guard, README and `CLAUDE.md`) says so in the pull request and the owner reviews those files. Edits made through a shell command are not covered by that rule, so the playbook forbids changing agent configuration in a ticket.

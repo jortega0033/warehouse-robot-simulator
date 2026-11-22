@@ -4,7 +4,7 @@ A dated record of every decision the owner made for this repository, so the rule
 
 | # | Decision | Date | Implemented in |
 |---|---|---|---|
-| 1 | The instructions, tooling and playbook live on the default branch. | 2026-11-22 | `CLAUDE.md`, `.claude/`, `.github/` on `main` |
+| 1 | The instructions, tooling and playbook live on the default branch. | 2026-11-22 | `CLAUDE.md`, `.claude/`, `.github/`; on the default branch (`main`) once the owner merges the preparation pull request |
 | 2 | Persona agents run automatically during ticket work and carry instructions tailored to this project. | 2026-11-22 | `.claude/agents/` ("In this repository" sections and "Use proactively" descriptions), `.claude/skills/implement-ticket/SKILL.md`, `.claude/agency-agents/README.md` |
 | 3 | Every open ticket is about app implementation; tooling is installed, not ticketed. | 2026-11-22 | Epic #1 and its sub-issues; tooling files listed in this table |
 | 4 | Agents may take a ticket up to a ready pull request. Only the owner merges and releases. | 2026-11-22 | `.claude/skills/next-ticket/SKILL.md`, `.claude/settings.json` (deny rules), `CLAUDE.md` "Git workflow", `docs/RELEASING.md` |
@@ -20,21 +20,23 @@ Entry 11 (Rust verified in CI only) does not apply: this project has no Rust. Nu
 
 ## Entry 10: decisions settled with the ticket's default
 
-The default applies until the owner says otherwise. Ticket numbers are GitHub issues in this repository; WH-07 and WH-08 are new tickets whose issue numbers are assigned when they are created.
+The default applies until the owner says otherwise. Ticket numbers are GitHub issues in this repository; WH-01a, WH-01b, WH-04a, WH-04b, WH-07, WH-08a, WH-08b and WH-09 are new tickets whose issue numbers are assigned when they are created (#2 and #5 become `tracking` parents of the first four).
 
 | ID | Decision | Ticket(s) | Default applied |
 |---|---|---|---|
-| D1 | Minimum Python version and package name | #2 | Python 3.12 or newer, package `warehouse_sim` |
-| D2 | Canonical encoding | #2 | JSON with sorted keys, separators `,` and `:`, ASCII-escaped, UTF-8, no BOM, no trailing newline; hashes are SHA-256 of those bytes |
-| D3 | Tick numbering in reports | #2, #3 | A fault in the actions of tick t is reported at snapshot t+1 |
-| D4 | Default server port | #2 | `--port` default 8780; `--port 0` picks a free port |
-| D5 | Where replays are written | #2 | `--out` is required; `runs/` is git-ignored; checks use a scratch directory |
-| D6 | Numbers the plan leaves open | WH-07, #4, #5 | Scenario file 256 KiB, replay file 8 MiB, 50,000 expansions per planning call, at most 3 alternate priority orders, checkpoint every 50 ticks |
-| D7 | Verifier reason codes | #3 | `same_cell_collision`, `edge_swap`, `wall_traversal`, `out_of_bounds`, `bad_move_distance`, `drop_without_pickup`, `missing_action`, `duplicate_action`, `summary_mismatch`, `checkpoint_mismatch` |
-| D8 | How the blocked reason is chosen | WH-08 | Unreachable only gives static unreachable; search budget if any search hit the cap in the qualifying ticks, else no legal progress; tick cap gives run limit |
+| D1 | Minimum Python version and package name | WH-01a | Python 3.12 or newer, package `warehouse_sim` |
+| D2 | Canonical encoding | WH-01a | JSON with sorted keys, separators `,` and `:`, ASCII-escaped, UTF-8, no BOM, no trailing newline; hashes are SHA-256 of those bytes |
+| D3 | Tick numbering in reports | WH-01a, #3 | A fault in the actions of tick t is reported at snapshot t+1 (the PRD's "collision at tick 2") |
+| D4 | Default server port | WH-01b | `--port` default 8780; `--port 0` picks a free port |
+| D5 | Where replays are written | WH-01a (`run`), WH-01b (`serve` keeps the replay in memory) | `--out` is required; `runs/` is git-ignored; checks use a scratch directory |
+| D6 | Numbers the plan leaves open | WH-01a (constants), WH-07, #4, WH-09 | Scenario file 256 KiB, replay file 8 MiB, 50,000 expansions per planning call, at most 3 alternate priority orders, checkpoint every 50 ticks |
+| D7 | Verifier reason codes | #3, WH-09 (`checkpoint_mismatch`) | `same_cell_collision`, `edge_swap`, `wall_traversal`, `out_of_bounds`, `bad_move_distance`, `drop_without_pickup`, `missing_action`, `duplicate_action`, `summary_mismatch`, `checkpoint_mismatch` |
+| D8 | How the blocked reason is chosen | WH-08a | Planning calls end `route`, `no_route` or `cap_hit`; a goal held by a non-moving robot or an exhausted planning horizon is `no_route`, never budget exhaustion. At termination: tick cap gives `run_limit_reached`; at the no-progress termination `search_budget_exhausted` if any planning call in the qualifying ticks ended `cap_hit`, else `no_legal_progress`; when only statically unreachable jobs remain, `static_unreachable` |
 | D9 | Random numbers for workloads | #6 | A small own integer generator, not `random`, so seeds match on every Python version and OS |
 | D10 | Scale steps and budget | #7 | 12, 25, 50, 100, 200 robots; 10 minutes per step; defaults unchanged, recommendation only |
-| D11 | Browser checks | #2, #5, #7 | Manual and recorded; no automation dependency |
+| D11 | Browser checks | WH-01b, WH-04b, WH-08b, #7 | Manual and recorded; no automation dependency (it would break the dependency policy) |
 | D12 | Licence | none | Stay unselected; no `LICENSE` file is added |
-| D13 | JavaScript tests | #2, #5 | None; the page renders server snapshots and logic stays in Python |
-| D14 | Play interval | #5 | 500 ms per tick, Space toggles |
+| D13 | JavaScript tests | WH-01b, WH-04b | None; the page renders server snapshots and logic stays in Python |
+| D14 | Play interval | WH-04b | 500 ms per tick, Space toggles |
+| D15 | Planning horizon | #4 | Static distance from start to goal plus 20 ticks (`horizon_slack` 20), recorded in the replay search settings |
+| D16 | `serve` launch behaviour | WH-01b | `serve [scenario] [--port N] [--no-open]`; default scenario `scenarios/single-order.json`; opens the browser unless `--no-open`; replay kept in memory |
