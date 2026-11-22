@@ -42,6 +42,7 @@ Nothing below exists at this commit. Each command is introduced by the ticket na
 | Run all tests | `python -m unittest` | planned: introduced by ticket #2 (WH-01) |
 | Run one scenario and write a replay | `python -m warehouse_sim run <scenario.json> --out <replay.json>` | planned: introduced by ticket #2 (WH-01) |
 | Fresh start: run the fixture and open the local browser view | `python -m warehouse_sim serve --port 0` (prints the URL; `--port 0` picks a free port) | planned: introduced by ticket #2 (WH-01) |
+| Validate a scenario against the schema and caps | `python -m warehouse_sim validate <scenario.json>` (exit 0 valid, 2 invalid) | planned: introduced by ticket WH-07 (new; issue number assigned when created) |
 | Verify a replay independently | `python -m warehouse_sim.verify <replay.json>` (exit 0 accepted, 1 rejected with the first invalid tick) | planned: introduced by ticket #3 (WH-02) |
 | Compare two assignment policies on a seeded workload | `python -m warehouse_sim compare --seed <n> ...` | planned: introduced by ticket #6 (WH-05) |
 | Scale report | `python -m warehouse_sim scale ...` | planned: introduced by ticket #7 (WH-06) |
@@ -52,7 +53,7 @@ The exact flags are fixed by the ticket that introduces the command, then record
 
 Short form of the module map in [docs/architecture.md](docs/architecture.md). Package `warehouse_sim` (default name):
 
-- `schema` and `canonical`: versioned scenario and replay JSON, validation, canonical encoding. No simulation logic.
+- `schema`, `canonical` and `limits`: versioned scenario and replay JSON, validation, canonical encoding, and every input cap in one place. No simulation logic.
 - `engine`: tick loop, state, action-set validation and atomic commit, event emission in robot ID order. It does not plan routes.
 - `scheduler`: job assignment, static reverse distances, time-expanded search, reservations, bounded replanning, blockage reasons. It proposes actions; only the engine commits them.
 - `verify`: the independent checker. It reconstructs occupancy and job state from the scenario and the recorded events with its own rules and must not import `engine` or `scheduler`. A rule that changes in one is written again in the other on purpose; a shared helper would defeat the check.
