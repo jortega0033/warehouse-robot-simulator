@@ -1,0 +1,36 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    name: test (${{ matrix.os }}, Python ${{ matrix.python-version }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        python-version: ["3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: ${{ matrix.python-version }}
+      # Guard: the application does not exist yet. Ticket WH-01a (a sub-issue of #2) creates the
+      # package `warehouse_sim` and must remove this `if` so the test command
+      # always runs and fails when it finds no tests.
+      - name: Run the tests (python -m unittest)
+        if: ${{ hashFiles('warehouse_sim/__init__.py') != '' }}
+        run: python -m unittest
+      - name: Review gate hook self-test
+        run: python .claude/hooks/role_gate.py --self-test

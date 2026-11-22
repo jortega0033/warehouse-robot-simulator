@@ -1,0 +1,7 @@
+version: 2
+updates:
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+# the project plans no third-party Python or npm packages (standard library only), so there is no pip or npm entry
