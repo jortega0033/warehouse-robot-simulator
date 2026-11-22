@@ -45,7 +45,7 @@ Nothing below exists at this commit. Each command is introduced by the ticket na
 | Run all tests | `python -m unittest` | planned: introduced by ticket WH-01a (sub-issue of #2) |
 | Run one scenario and write a replay | `python -m warehouse_sim run <scenario.json> --out <replay.json>` | planned: introduced by ticket WH-01a (sub-issue of #2) |
 | Fresh start: run a scenario and open the local browser view | `python -m warehouse_sim serve [scenario] [--port N] [--no-open]` (default scenario `scenarios/single-order.json`, default port 8780, `--port 0` picks a free port; runs the scenario, prints the URL and opens the browser unless `--no-open` is given; tests and checks use `--no-open`) | planned: introduced by ticket WH-01b (sub-issue of #2) |
-| Validate a scenario against the schema and caps | `python -m warehouse_sim validate <scenario.json>` (exit 0 valid, 2 invalid) | planned: introduced by ticket WH-07 (new; issue number assigned when created) |
+| Validate a scenario against the schema and caps | `python -m warehouse_sim validate <scenario.json>` (exit 0 valid, 2 invalid) | planned: introduced by ticket WH-07 (#10) |
 | Verify a replay independently | `python -m warehouse_sim.verify <replay.json>` (exit 0 accepted, 1 rejected with the first invalid tick) | planned: introduced by ticket #3 (WH-02) |
 | Compare two assignment policies on a seeded workload | `python -m warehouse_sim compare --seed <n> ...` | planned: introduced by ticket #6 (WH-05) |
 | Scale report | `python -m warehouse_sim scale ...` | planned: introduced by ticket #7 (WH-06) |

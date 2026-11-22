@@ -20,7 +20,7 @@ Entry 11 (Rust verified in CI only) does not apply: this project has no Rust. Nu
 
 ## Entry 10: decisions settled with the ticket's default
 
-The default applies until the owner says otherwise. Ticket numbers are GitHub issues in this repository; WH-01a, WH-01b, WH-03a, WH-03b, WH-04a, WH-04b, WH-07, WH-08a, WH-08b and WH-09 are new tickets whose issue numbers are assigned when they are created (#2, #4 and #5 become `tracking` parents of the sub-issues that carry their names).
+The default applies until the owner says otherwise. Ticket numbers are GitHub issues in this repository; the new tickets are WH-01a #8, WH-01b #9, WH-07 #10, WH-03a #11, WH-03b #12, WH-04a #13, WH-04b #14, WH-08a #15, WH-08b #16 and WH-09 #17; the older ones are WH-01 #2, WH-02 #3, WH-03 #4, WH-04 #5, WH-05 #6 and WH-06 #7; the epic is #1 (#2, #4 and #5 become `tracking` parents of the sub-issues that carry their names).
 
 | ID | Decision | Ticket(s) | Default applied |
 |---|---|---|---|
