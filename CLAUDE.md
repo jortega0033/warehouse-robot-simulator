@@ -17,6 +17,9 @@ A planned offline warehouse robot simulator. A person runs a fictional order sce
 | Loop setup and its limits | [LOOP.md](LOOP.md), [loop-constraints.md](loop-constraints.md) |
 | Project subagents, their origin and local changes | [.claude/agency-agents/README.md](.claude/agency-agents/README.md) |
 | Ticket workflow and the step at which each agent role runs | [.claude/skills/implement-ticket/SKILL.md](.claude/skills/implement-ticket/SKILL.md), section "Ticket implementation: agent roles run automatically" below |
+| Decisions the owner made, dated, with where each is implemented | [docs/owner-decisions.md](docs/owner-decisions.md) |
+| UI rules and writing quality (binding) | [docs/ui-quality.md](docs/ui-quality.md) |
+| Releases | [docs/RELEASING.md](docs/RELEASING.md) |
 
 When a document and the code disagree once code exists, the code is the baseline and [docs/architecture.md](docs/architecture.md) records the difference. A ticket that changes a contract (scenario schema, replay schema, command line, caps) updates the document that states it in the same pull request.
 
@@ -70,7 +73,7 @@ Rules every change must keep:
 ## Git workflow
 
 - `main` is the default branch. Branch per ticket (`<issue-number>-<short-slug>`), pull request to `main`, small commits with a type prefix (`feat:`, `fix:`, `test:`, `docs:`, `chore:`).
-- Only the owner merges and releases. Do not push to `main`, force-push or merge your own pull request. Do not push or open a pull request unless the owner asked in the current session.
+- Only the owner merges and releases. Do not push to `main`, force-push or merge your own pull request. Do not push or open a pull request unless the owner asked in the current session; starting `/next-ticket` is that request for one ticket.
 - Order for every ticket: local checks, Code Reviewer, Reality Checker, then a draft pull request that names the issue (`Part of #1`, `Closes #n`), then CI on that draft, then ready only when CI is green.
 - Never commit `.env*`, generated replays or run output, or `.claude/state/`.
 - Do not change `.claude/agents/`, `LOOP.md`, `loop-constraints.md` or `loop-budget.md` as part of a feature ticket.
@@ -85,7 +88,8 @@ Paste real output into the pull request description; do not summarise a run you 
 4. For a change under `static/`: a browser run on the local URL with the browser name and version, keyboard-only operation of the changed controls, and the console and network log free of errors and external requests. Browser automation is excluded by the dependency policy; the step is manual and listed under "Owner checks" in the pull request.
 5. For a performance claim: the machine, the fixture size and the measured numbers, not an assertion.
 6. `git status` free of stray files, and confirmation that no dependency, external URL or non-loopback listener was added.
-7. Anything not verified, said plainly.
+7. Green CI on the pull request (Linux and Windows) with the run link. CI cannot be judged before the draft pull request exists, so the order is: local checks, Code Reviewer, Reality Checker, draft pull request, CI, then ready.
+8. Anything not verified, said plainly.
 
 ## Ticket implementation: agent roles run automatically
 
@@ -101,3 +105,19 @@ Delegate to the project subagents in `.claude/agents/` without waiting to be ask
 - List the roles that ran and their verdicts in the pull request description under "Agent roles run".
 
 Each role's `description` ends with a "Use proactively ..." sentence, which is what makes Claude Code delegate to it without being told.
+
+## Delivery workflow
+
+How a ticket gets from the backlog to a ready pull request. The files below hold the details; this part only points to them.
+
+- **Start:** only the owner, with `/next-ticket [issue number]` ([`.claude/skills/next-ticket/SKILL.md`](.claude/skills/next-ticket/SKILL.md)). It is the go signal for one ticket, because the repository is used to train AI models. There is no scheduler. A `tracking` parent is never picked; only leaf sub-issues are work.
+- **Playbook:** [`.claude/skills/implement-ticket/SKILL.md`](.claude/skills/implement-ticket/SKILL.md).
+- **Review gate hook:** [`.claude/hooks/role_gate.py`](.claude/hooks/role_gate.py) blocks `gh pr create` and `gh pr ready` until Code Reviewer and Reality Checker ran after the last code edit; documentation-only changes pass. `ROLE_GATE=off` in the environment Claude Code is started from switches it off for that session. Self-test: `python .claude/hooks/role_gate.py --self-test`.
+- **Permission rules:** [`.claude/settings.json`](.claude/settings.json). Documented commands are allowed; force pushes, pushes to `main`, `gh pr merge`, releases and reads of `.env` are denied; edits to `.github/`, agent configuration, `CLAUDE.md`, `AGENTS.md` and the Loop files ask first.
+- **CI:** [`.github/workflows/ci.yml`](.github/workflows/ci.yml) runs on Linux and Windows. It must be green before a pull request is marked ready. Until ticket #2 creates the package, the test step is guarded by the existence of `warehouse_sim/__init__.py`; ticket #2 removes the guard.
+- **Pull request template:** [`.github/pull_request_template.md`](.github/pull_request_template.md). **Ticket template:** [`.github/ISSUE_TEMPLATE/implementation-ticket.md`](.github/ISSUE_TEMPLATE/implementation-ticket.md).
+- **Labels:** `status:ready`, `status:blocked`, `status:in-progress`, `needs-decision`, `tracking`.
+- **Changelog:** every ticket pull request adds a line under `Unreleased` in [CHANGELOG.md](CHANGELOG.md).
+- **UI and copy:** UI tickets start with the `ui-ux-pro-max` skill and end with a check against [docs/ui-quality.md](docs/ui-quality.md); user-facing copy, docs and pull request text go through the `unslop` skill.
+- **Merging and releasing:** only the owner. See [docs/RELEASING.md](docs/RELEASING.md) and [SECURITY.md](SECURITY.md).
+- **Decisions:** [docs/owner-decisions.md](docs/owner-decisions.md). An agent that finds a recorded decision blocking a ticket stops and says so.

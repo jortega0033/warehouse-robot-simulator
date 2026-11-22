@@ -16,12 +16,14 @@ The project subagents in `.claude/agents/` are part of the work. Delegate to the
 2. **Read the rules.** `CLAUDE.md`, then the architecture notes it links to.
 3. **Orient and check the approach.** Delegate as the table "Before coding" says. Settle open design questions before writing code.
 4. **Branch** as the Git workflow in `CLAUDE.md` says. Never work on the default branch.
-5. **Implement** inside the ticket's stated scope. Delegate the work to the implementing role that matches the files being changed (table "While coding"). Do not widen scope; note anything else you find as a follow-up.
+5. **Implement** inside the ticket's stated scope. Delegate the work to the implementing role that matches the files being changed (table "While coding"). Do not widen scope; note anything else you find as a follow-up. For a ticket that builds or changes UI, start with the `ui-ux-pro-max` skill (`python .claude/skills/ui-ux-pro-max/scripts/search.py "<product type>" --design-system`) and apply `docs/ui-quality.md`; the project's no-framework, no-external-asset rules win over the skill's suggestions.
 6. **Test.** Add or change tests for every acceptance criterion and material edge case, then run the checks listed in `CLAUDE.md`. Record each command and its result.
 7. **Specialist review.** Run every role in the table "After coding" whose trigger matches the change.
 8. **Review gate, always.** Run Code Reviewer on the full diff. Fix every material finding, re-run the checks, and have the reviewer look again until no material finding is left.
 9. **Acceptance gate, always.** Run Reality Checker with the ticket's acceptance criteria and the evidence you produced. Do not call the ticket done unless it passes.
-10. **Hand off.** Capture the evidence `CLAUDE.md` asks for and open a draft pull request that names the issue. Do not merge.
+10. **Copy.** Run user-facing copy, documentation and the pull request text through the `unslop` skill. For a UI ticket, check the changed screens against `docs/ui-quality.md`.
+11. **Draft pull request.** Only now, with local checks recorded and both gates run after the last code edit, push and `gh pr create --draft` naming the issue (`Closes #n`, `Part of #1`; the last open sub-issue of a parent also says `Closes #<parent>`). Add a line to `CHANGELOG.md`. Capture the evidence `CLAUDE.md` asks for.
+12. **CI.** CI runs on the draft pull request. If it fails, fix, re-run local checks and both gates, and push. When CI is green, `gh pr ready` and comment on the issue with the CI run link. Do not poll: end the turn with "Draft pull request #N is waiting for CI" and read `gh pr checks` once when woken. Do not merge.
 
 ## Roles
 
@@ -56,6 +58,9 @@ The project subagents in `.claude/agents/` are part of the work. Delegate to the
 ## Rules
 
 - The session or role that wrote a change does not count as its reviewer.
-- Read-only reviewers cannot run commands. Give them the diff, the acceptance criteria and the recorded command output.
+- Read-only reviewers cannot run commands. Write the diff and the recorded command output to `.claude/state/review/` (git-ignored: `diff-stat.txt`, `diff.patch`, `checks.txt`) and name those files and the acceptance criteria in the request.
+- Reality Checker checks that the documented checks ran locally and passed and that CI is configured to run them; it does not require a CI result. Green CI is checked by the driver before `gh pr ready`.
+- A criterion that needs a person (manual, recorded) is done as far as an agent can and the rest goes under "Owner checks" in the pull request; Reality Checker accepts that only where the ticket marks the step as manual.
+- Do not change agent configuration, skills, hooks or `.claude/settings.json` in a ticket.
 - Where a role's general advice (frameworks, dependencies, cloud services) conflicts with `CLAUDE.md`, `CLAUDE.md` wins.
 - In the pull request description, add a section "Agent roles run" listing each role that ran, what it was asked and its verdict, and any step you did yourself because a role was missing.

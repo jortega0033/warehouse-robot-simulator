@@ -74,3 +74,14 @@ A section headed "In this repository" was then inserted directly after the front
 To compare a role with the pinned upstream file, remove three things first: the "Use proactively" sentence (in Backend Architect, Frontend Developer, Performance Benchmarker and Reality Checker also the full stop that was added in front of it, where the upstream description has none), the section "In this repository" together with the blank line after it, and the `tools:` line where one was added. Checked on 2026-11-22: with these three removed, each of the eight files has the upstream SHA-256 listed in the table above. Check the sections against the code once code exists; until then they describe a plan.
 
 Verification, 2026-11-22: the headless `claude -p` loading check was not run in this preparation stage and is still to be done after the delivery tooling is installed. File structure was checked by reading the files: eight Agency Agents roles, each starting with "In this repository" after valid frontmatter, six with `tools: Read, Grep, Glob`.
+
+## Delivery tooling installed, loading check run (2026-11-22)
+
+The delivery tooling was installed directly on the preparation branch (review gate hook, `.claude/settings.json`, CI, GitHub templates, the `next-ticket` driver, the `ui-ux-pro-max` and `unslop` skills, `docs/ui-quality.md`, `docs/owner-decisions.md`). No role file changed in that step.
+
+Loading check, run once from the repository root with Claude Code 2.1.323: `claude -p "List every project subagent in .claude/agents with its name and tools, say whether each starts with a section titled In this repository, and list the project skills." --model haiku`. Result as reported by the session (Haiku, requested model):
+
+- Nine subagents found. Code Reviewer, Software Architect, Application Security Engineer, Accessibility Auditor, Performance Benchmarker, Reality Checker and loop-verifier list `Read, Grep, Glob`. Backend Architect and Frontend Developer list no `tools` field (all tools), as intended for the two implementing roles.
+- Eight of the nine start with "In this repository"; `loop-verifier` does not, as intended. The session said it opened only three of the files and inferred the rest from the heading line numbers, so this part is confirmed by the file check above, not by the session alone.
+- Project skills found: `loop-budget`, `loop-constraints`, `loop-intake`, `issue-triage`, `ui-ux-pro-max`, `unslop`, `next-ticket`, `implement-ticket`.
+- The session printed two notices. This worktree is not yet trusted, so the `permissions.allow` entries were ignored until the owner accepts the trust dialog once. The `Write(**/.claude/...)` ask rules from the kit template are reported as not matched by file permission checks (only `Edit(...)` rules apply, and they cover all file-editing tools); the `Edit(**/...)` rules beside them do the work.

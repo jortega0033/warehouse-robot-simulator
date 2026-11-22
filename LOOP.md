@@ -54,6 +54,10 @@ Doctor exit codes: 0 healthy, 1 warnings, 2 blocked. Both commands fetch the pac
 - Stale issue closure: human confirms.
 - Any change to this file, `loop-budget.md` or `loop-constraints.md`: human only.
 
+## Ticket work is not a loop run
+
+Implementing a ticket is not a loop run. The owner starts it with `/next-ticket`, and it is governed by `CLAUDE.md`, the `implement-ticket` playbook, the review gate hook, CI and branch protection. The loop stays at L1: report-only and unscheduled.
+
 ## Verifier
 
 `.claude/agents/loop-verifier.md` is the checker for a later maker/checker level. It is limited to `Read, Grep, Glob`, so it cannot run the tests itself and must answer `ESCALATE_HUMAN` when a verdict depends on a test run. It has no role at L1 because the loop proposes no changes.
