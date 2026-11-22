@@ -464,8 +464,9 @@ def self_test():
         cd_create = gh('cd "%s" && gh pr create --draft --title x --body y' % tree)
         expect("(a) cd <worktree> && gh pr create is blocked", run(main, "check", cd_create), 2)
         expect("(a) relative cd ../wt is blocked", run(main, "check", gh("cd ../wt && gh pr create --fill")), 2)
-        expect("(a) Set-Location with backslashes is blocked",
-               run(main, "check", gh("Set-Location '%s'; gh pr create --fill" % tree.replace("/", "\\"))), 2)
+        if os.name == "nt":  # backslash paths only exist on Windows
+            expect("(a) Set-Location with backslashes is blocked",
+                   run(main, "check", gh("Set-Location '%s'; gh pr create --fill" % tree.replace("/", "\\"))), 2)
         head_create = gh("gh pr create --head wt-feature --title x --body y")
         expect("(b) gh pr create --head <branch> from main is blocked", run(main, "check", head_create), 2)
         expect("(b) -R does not change the directory",
