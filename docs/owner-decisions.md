@@ -1,6 +1,6 @@
 # Owner decisions
 
-A dated record of every decision the owner made for this repository, so the rules do not depend on anyone's memory of a conversation. All entries are dated 2026-11-22. Changing any entry needs the owner; an agent that finds a decision blocking a ticket stops and says so.
+A dated record of every decision the owner made for this repository, so the rules do not depend on anyone's memory of a conversation. Entries are dated 2026-11-22 unless the date column says otherwise. Changing any entry needs the owner; an agent that finds a decision blocking a ticket stops and says so.
 
 | # | Decision | Date | Implemented in |
 |---|---|---|---|
@@ -15,6 +15,7 @@ A dated record of every decision the owner made for this repository, so the rule
 | 9 | Permission rules: documented commands are allowed; force pushes, pushes to the default branch, merges, releases and reads of secrets are denied; edits to CI, agent configuration and Loop files ask first. | 2026-11-22 | `.claude/settings.json` (`permissions`) |
 | 10 | Open decisions on tickets are settled with the ticket's stated default. The list is below. | 2026-11-22 | The tickets named below |
 | 12 | The ten UI rules in `docs/ui-quality.md` are binding, and the `ui-ux-pro-max` and `unslop` skills are installed in the repository and used for UI work and for copy. | 2026-11-22 | `docs/ui-quality.md`, `.claude/skills/ui-ux-pro-max/`, `.claude/skills/unslop/`, `.claude/skills/implement-ticket/SKILL.md` |
+| 13 | Visual system: Pipenzo Flow look tokens (docs/design-tokens.md). SDLC kit version: jortega0033/sdlc-kit v1.0.0. | 2026-11-23 | `docs/design-tokens.md`, `warehouse_sim/static/tokens.css` |
 
 Entry 11 (Rust verified in CI only) does not apply: this project has no Rust. Numbering follows the owner's list so entries match other repositories.
 
