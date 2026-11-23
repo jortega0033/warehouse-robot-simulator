@@ -1,6 +1,6 @@
 # Warehouse Robot Simulator
 
-A planned offline project. Implementation has not started. The repository currently contains the product plan, technical specification and implementation backlog.
+A planned offline project. Implementation has not started. The repository currently contains the product plan, technical specification and implementation backlog. A scaffold exists: `python -m unittest` runs the smoke tests and `python -m warehouse_sim --help` prints the planned commands.
 
 ## Plan
 

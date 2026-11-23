@@ -4,7 +4,7 @@ Working instructions for this repository. Read this file first, then the documen
 
 ## What this is
 
-A planned offline warehouse robot simulator. A person runs a fictional order scenario on a grid, watches robots share aisle space in a local browser, inspects why an order completed or stalled, and checks a saved replay with an independent verifier. **Nothing is implemented yet.** The repository holds the product plan, the technical specification and the backlog. No command in this file runs today; every command below is marked "planned" with the ticket that introduces it.
+A planned offline warehouse robot simulator. A person runs a fictional order scenario on a grid, watches robots share aisle space in a local browser, inspects why an order completed or stalled, and checks a saved replay with an independent verifier. **The product is not implemented yet.** The repository holds the plan, the specification, the backlog and an empty scaffold (package, test folder, CI). Commands marked "planned" are introduced by the ticket named.
 
 ## Sources of truth
 
@@ -38,11 +38,13 @@ The PRD names the stack: "standard-library Python and plain JavaScript served fr
 
 ## Setup, run and test commands (all planned)
 
-Nothing below exists at this commit. Each command is introduced by the ticket named; until that ticket is merged, running it fails. Interpreter: `python` on Windows, `python3` on Linux.
+The scaffold makes the first three rows run. The other commands parse their arguments and exit 3 with "not implemented yet: see #<ticket>" until the ticket named introduces them. Interpreter: `python` on Windows, `python3` on Linux.
 
 | Purpose | Planned command | Introduced by |
 |---|---|---|
-| Run all tests | `python -m unittest` | planned: introduced by ticket WH-01a (sub-issue of #2) |
+| Run all tests | `python -m unittest` | scaffold (smoke tests only; tickets add the real ones) |
+| Syntax check (no linter or type checker: standard library only) | `python -m compileall -q warehouse_sim tests` | scaffold |
+| Entry point help and version | `python -m warehouse_sim --help`, `python -m warehouse_sim --version` | scaffold |
 | Run one scenario and write a replay | `python -m warehouse_sim run <scenario.json> --out <replay.json>` | planned: introduced by ticket WH-01a (sub-issue of #2) |
 | Fresh start: run a scenario and open the local browser view | `python -m warehouse_sim serve [scenario] [--port N] [--no-open]` (default scenario `scenarios/single-order.json`, default port 8780, `--port 0` picks a free port; runs the scenario, prints the URL and opens the browser unless `--no-open` is given; tests and checks use `--no-open`) | planned: introduced by ticket WH-01b (sub-issue of #2) |
 | Validate a scenario against the schema and caps | `python -m warehouse_sim validate <scenario.json>` (exit 0 valid, 2 invalid) | planned: introduced by ticket WH-07 (#10) |
@@ -82,7 +84,7 @@ Rules every change must keep:
 
 ## Evidence before a ticket is called done
 
-Paste real output into the pull request description; do not summarise a run you did not make. None of this can be run before ticket WH-01a exists, and WH-01a creates the test command itself.
+Paste real output into the pull request description; do not summarise a run you did not make. The test command exists from the scaffold; most items need the ticket's own code.
 
 1. The output tail of `python -m unittest` from a clean checkout, with the Python version and the operating system, and the test count before and after.
 2. For each acceptance criterion of the issue: the name of the test that proves it, or the exact command and what it printed. Fixtures in [docs/TECHNICAL_SPEC.md](docs/TECHNICAL_SPEC.md) are acceptance targets until a test reproduces them.
@@ -116,7 +118,7 @@ How a ticket gets from the backlog to a ready pull request. The files below hold
 - **Playbook:** [`.claude/skills/implement-ticket/SKILL.md`](.claude/skills/implement-ticket/SKILL.md).
 - **Review gate hook:** [`.claude/hooks/role_gate.py`](.claude/hooks/role_gate.py) blocks `gh pr create` and `gh pr ready` until Code Reviewer and Reality Checker ran after the last code edit; documentation-only changes pass. `ROLE_GATE=off` in the environment Claude Code is started from switches it off for that session. Self-test: `python .claude/hooks/role_gate.py --self-test`.
 - **Permission rules:** [`.claude/settings.json`](.claude/settings.json). Documented commands are allowed; force pushes, pushes to `main`, `gh pr merge`, releases and reads of `.env` are denied; edits to `.github/`, agent configuration, `CLAUDE.md`, `AGENTS.md` and the Loop files ask first.
-- **CI:** [`.github/workflows/ci.yml`](.github/workflows/ci.yml) runs on Linux and Windows. It must be green before a pull request is marked ready. Until ticket WH-01a creates the package, the test step is guarded by the existence of `warehouse_sim/__init__.py`; WH-01a removes the guard.
+- **CI:** [`.github/workflows/ci.yml`](.github/workflows/ci.yml) runs on Linux and Windows. It must be green before a pull request is marked ready. It runs `python -m compileall` and `python -m unittest` with no skip guard.
 - **Pull request template:** [`.github/pull_request_template.md`](.github/pull_request_template.md). **Ticket template:** [`.github/ISSUE_TEMPLATE/implementation-ticket.md`](.github/ISSUE_TEMPLATE/implementation-ticket.md).
 - **Labels:** `status:ready`, `status:blocked`, `status:in-progress`, `needs-decision`, `tracking`.
 - **Changelog:** every ticket pull request adds a line under `Unreleased` in [CHANGELOG.md](CHANGELOG.md).
