@@ -1,10 +1,10 @@
 # Design tokens
 
-The visual system for this repository is the Pipenzo "Flow look" token file: a black page, Flow-style alpha layers, one accent (Pipenzo yellow `#FECE02`), and red only for danger. The owner chose it for every repository ([docs/owner-decisions.md](owner-decisions.md)).
+The visual system for this repository is the Pipenzo "Flow look" token file: a black page, Flow-style alpha layers, one accent (Pipenzo yellow `#FECE02`), and red only for danger. Yellow marks the primary action, the current step and the current selection. The owner chose it for every repository ([docs/owner-decisions.md](owner-decisions.md)).
 
 ## Source
 
-`warehouse_sim/static/tokens.css` is a byte-for-byte copy of `extension/sidepanel/tokens.css` in `jortega0033/clip-to-reel-studio`, commit `a13378ce73e5b27213c9a200fc960ec93afef054` (2026-11-21). The header comment of the file holds the contrast checks and the yellow rule.
+`warehouse_sim/static/tokens.css` is a byte-for-byte copy of `extension/sidepanel/tokens.css` in `jortega0033/clip-to-reel-studio`, commit `a13378ce73e5b27213c9a200fc960ec93afef054` (2026-11-21). The header comment of the file holds the contrast checks and the yellow rule. That comment is narrower than the rules below: it lists yellow uses of the source product and does not name the current selection or the focus ring. The copy must stay identical to the source, so the comment cannot be changed here. Where the comment and this document differ, this document takes precedence.
 
 ## Resync
 
@@ -27,12 +27,29 @@ Some tokens (glass, blur, gradients, large shadows) exist in the source file but
 
 ## Rule
 
-New UI uses these tokens. No new colour literals in CSS or JavaScript. Canvas or inline colours are read with `getComputedStyle(document.documentElement).getPropertyValue('--token')`. Yellow is only for the primary action and the current step; red only for danger.
+New UI uses these tokens. No new colour literals in CSS or JavaScript. Canvas or inline colours are read with `getComputedStyle(document.documentElement).getPropertyValue('--token')`. Yellow is only for the primary action, the current step and the current selection (UI rule 8 in [docs/ui-quality.md](ui-quality.md)); red only for danger. The focus ring is covered under "Focus ring" below.
+
+## Current selection
+
+The owner decided on 2026-11-23 that the yellow accent is used for the primary action, the current-step marker and the current selection. How it is drawn is a recommendation by the orchestrator, adopted under the owner's delegation of the same day:
+
+- A selection uses a solid `--primary` fill with `--on-primary` text. A yellow border alone is not enough: it has about 1.5:1 against white on light.
+- A second sign that is not colour: weight, an icon or text.
+- The existing aria attribute (for example `aria-selected`, `aria-current` or `aria-pressed`).
+- Never a tint with a same-hue border, and never a thick one-sided border (UI rules 1 and 2).
+
+Status: some parts of the page still mark selection in a neutral colour. The page follows in ticket work; it is not done yet.
+
+## Focus ring
+
+`--focus` is a focus indicator and is exempt from the accent limit, including where it is yellow in dark. A ticket that says the focus style stays unchanged means the rule on main after the token pull request. Recommended by the orchestrator, adopted under the owner's delegation of 2026-11-23.
 
 ## Light and dark
 
 Dark is the primary design. The `:root` block is the matching light theme. The dark values apply through the operating system colour scheme (`prefers-color-scheme`), with `color-scheme: light dark` set. There is no manual switch.
 
+Contrast checks and no-colour-alone checks cover both the light block and the dark block of `tokens.css`; a pair that passes in one theme is not assumed to pass in the other. Recommended by the orchestrator, adopted under the owner's delegation of 2026-11-23.
+
 ## Linking
 
-Link `tokens.css` before any other stylesheet. The server's static allowlist (ticket #9, WH-01b) must include it, and its test must list it. The page ships from `warehouse_sim/static/`.
+Link `tokens.css` before any other stylesheet. A ticket that creates a page or the static allowlist links `tokens.css` before any other stylesheet and serves it: the allowlist includes it and the allowlist test lists it (ticket #9, WH-01b, is the first such ticket). Recommended by the orchestrator, adopted under the owner's delegation of 2026-11-23. The page ships from `warehouse_sim/static/`.
