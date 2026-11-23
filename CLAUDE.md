@@ -122,6 +122,6 @@ How a ticket gets from the backlog to a ready pull request. The files below hold
 - **Pull request template:** [`.github/pull_request_template.md`](.github/pull_request_template.md). **Ticket template:** [`.github/ISSUE_TEMPLATE/implementation-ticket.md`](.github/ISSUE_TEMPLATE/implementation-ticket.md).
 - **Labels:** `status:ready`, `status:blocked`, `status:in-progress`, `needs-decision`, `tracking`.
 - **Changelog:** every ticket pull request adds a line under `Unreleased` in [CHANGELOG.md](CHANGELOG.md).
-- **UI and copy:** UI tickets start with the `ui-ux-pro-max` skill and end with a check against [docs/ui-quality.md](docs/ui-quality.md); user-facing copy, docs and pull request text go through the `unslop` skill.
+- **UI and copy:** UI tickets use the tokens in [docs/design-tokens.md](docs/design-tokens.md) (`warehouse_sim/static/tokens.css`, no new colour literals). UI tickets start with the `ui-ux-pro-max` skill and end with a check against [docs/ui-quality.md](docs/ui-quality.md); user-facing copy, docs and pull request text go through the `unslop` skill.
 - **Merging and releasing:** only the owner. See [docs/RELEASING.md](docs/RELEASING.md) and [SECURITY.md](SECURITY.md).
 - **Decisions:** [docs/owner-decisions.md](docs/owner-decisions.md). An agent that finds a recorded decision blocking a ticket stops and says so.
