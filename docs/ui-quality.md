@@ -19,4 +19,5 @@ Binding rules for every screen and every piece of user-facing copy in this repos
 - User-facing copy, documentation and pull request text go through the `unslop` skill before the pull request is opened.
 - The project's own constraints still apply: plain HTML, CSS and JavaScript from the local server, no framework, no external font, image or script, keyboard operation and visible focus ([CLAUDE.md](../CLAUDE.md), "Stack and constraints"). Where a skill suggests a framework, CDN or web font, this repository's rules win.
 - This product is a simulator view: a grid, a robot table, an order table, run status, timeline controls and an error panel. A table is the right form for the order and robot state; do not turn it into cards.
+- Rule 8 is read with the "Rule", "Current selection" and "Focus ring" sections of [design-tokens.md](design-tokens.md) and owner decision 14 in [owner-decisions.md](owner-decisions.md): the accent also marks the current step, and `--focus` is a focus indicator, exempt from the accent limit.
 - Colours, type, radii and motion come from the design tokens in [docs/design-tokens.md](design-tokens.md); do not add colour literals.
