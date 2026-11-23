@@ -8,7 +8,7 @@ The visual system for this repository is the Pipenzo "Flow look" token file: a b
 
 ## Resync
 
-Copy the file over `warehouse_sim/static/tokens.css`. Nothing else. Never edit the copy here; a change belongs in the source repository.
+Copy the file over `warehouse_sim/static/tokens.css` (the source commits LF line endings; git handles the working-copy endings, so the committed blob must equal the source blob). Nothing else. Never edit the copy here; a change belongs in the source repository.
 
 ## Token names by role
 
