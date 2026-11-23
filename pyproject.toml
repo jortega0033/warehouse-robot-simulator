@@ -1,0 +1,6 @@
+[project]
+name = "warehouse-sim"
+version = "0.0.0"
+description = "Offline warehouse robot simulator (standard library only)."
+requires-python = ">=3.12"
+dependencies = []
