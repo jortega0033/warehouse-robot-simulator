@@ -36,11 +36,11 @@ The PRD names the stack: "standard-library Python and plain JavaScript served fr
 - Synthetic data only: no physical devices, live inventory or customer data.
 - Licence not selected ([README.md](README.md)). Do not add a `LICENSE` file or change licence wording without the owner.
 
-## Setup, run and test commands (all planned)
+## Setup, run and test commands
 
 The scaffold makes the first three rows run. The other commands parse their arguments and exit 3 with "not implemented yet: see #<ticket>" until the ticket named introduces them. Interpreter: `python` on Windows, `python3` on Linux.
 
-| Purpose | Planned command | Introduced by |
+| Purpose | Command | Introduced by |
 |---|---|---|
 | Run all tests | `python -m unittest` | scaffold (smoke tests only; tickets add the real ones) |
 | Syntax check (no linter or type checker: standard library only) | `python -m compileall -q warehouse_sim tests` | scaffold |
@@ -52,7 +52,7 @@ The scaffold makes the first three rows run. The other commands parse their argu
 | Compare two assignment policies on a seeded workload | `python -m warehouse_sim compare --seed <n> ...` | planned: introduced by ticket #6 (WH-05) |
 | Scale report | `python -m warehouse_sim scale ...` | planned: introduced by ticket #7 (WH-06) |
 
-The exact flags are fixed by the ticket that introduces the command, then recorded here and in the README in the same pull request. Generated replays, run output and scale reports go to a scratch directory outside the repository (or under `runs/`, which ticket #2 adds to `.gitignore`); never commit them.
+The exact flags are fixed by the ticket that introduces the command, then recorded here and in the README in the same pull request. Generated replays, run output and scale reports go to a scratch directory outside the repository (or under `runs/`, which is git-ignored); never commit them.
 
 On Windows use `python` only. To hash a file: `python -c "import hashlib,sys;print(hashlib.sha256(open(sys.argv[1],'rb').read()).hexdigest())" <file>` (instead of `sha256sum`). To read an exit code: `echo $?` in bash, `$LASTEXITCODE` in PowerShell.
 
