@@ -42,3 +42,13 @@ The default applies until the owner says otherwise. Ticket numbers are GitHub is
 | D14 | Play interval | WH-04b | 500 ms per tick, Space toggles |
 | D15 | Planning horizon and non-moving robots | #4 (WH-03a, WH-03b) | Horizon: static distance from start to goal plus 20 ticks (`horizon_slack` 20), recorded in the replay search settings. A robot is non-moving when it has no job, its plan has ended, or it ended `no_route` or `cap_hit` in the current planning round; a lower-priority robot that is not yet planned in the round is not non-moving and is ignored by higher-priority searches. When a robot ends `no_route` or `cap_hit` and an earlier plan of the same round enters its cell, the round is repeated with that robot non-moving, until no earlier plan enters the cell of a non-moving robot; then at most `alternate_bound` (default 3) alternate priority orders are tried and the result with strictly fewer stalled robots is kept |
 | D16 | `serve` launch behaviour | WH-01b | `serve [scenario] [--port N] [--no-open]`; default scenario `scenarios/single-order.json`; opens the browser unless `--no-open`; replay kept in memory |
+
+## Program decisions (owner, 2026-11-24)
+
+The owner accepted the goal and each suggestion below. They apply from the phase they name; the rules of `CLAUDE.md` hold for phase 1 as written.
+
+| Decision | Implemented in |
+|---|---|
+| The repository has a program goal above phase 1: a warehouse digital twin, in six phases. | Program issue #27 |
+| The rule standard-library Python limits 1,000-robot planning. Suggested: allow a compiled planner core from the optimal planning phase. | Program issue #27 |
+| Benchmark maps have their own licences. Suggested: fetch at a pinned version, commit none. | Program issue #27 |
