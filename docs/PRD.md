@@ -1,5 +1,7 @@
 # Warehouse Robot Simulator
 
+> This document specifies phase 1 of the program in [#27](https://github.com/jortega0033/warehouse-robot-simulator/issues/27). Hour figures in it are early estimates for that phase; its open tickets add up to 54 to 84 hours (2026-11-24). Work that it defers is planned in the later phases only where the program names it.
+
 ## Product requirements
 
 A developer or warehouse-layout planner can run a fictional order scenario, see how robots share aisle space, and inspect why an order completed or stalled. A saved run must replay the same decisions and pass a separate collision check. The browser shows a virtual grid and robot history. All scenarios use generated or locally authored data.
