@@ -23,7 +23,7 @@ Labels: `status:ready`, `status:blocked`, `status:in-progress`, `needs-decision`
 
 1. **Refresh the queue.** `gh issue list` for the epic's children.
    - A `status:blocked` ticket whose blockers are all closed becomes `status:ready` (remove `status:blocked`).
-   - A parent whose sub-issues are all closed is closed with a comment that names the last sub-issue.
+   - A parent whose sub-issues are all closed is closed with a comment that names the last sub-issue. A ticket with no sub-issues is never closed by this step.
 2. **Pick.** With an issue number, use it, after checking that it is a leaf, open, `status:ready` and not `needs-decision`. Without one, take the first `status:ready` leaf ticket in the epic's order that is not `status:in-progress` and not `needs-decision`. If none qualifies, say why (blocked, decision open, queue empty) and stop.
 3. **Claim.** Label it `status:in-progress` and remove `status:ready`.
 4. **Worktree.** `git fetch origin`, then create a fresh worktree and a branch named `<issue-number>-<short-slug>` from `origin/main`. All work happens there. Never work on `main`.
